@@ -117,7 +117,7 @@ The project requires Java 8 and Maven to build.
 
     $ mvn spring-boot:run
 
-#### Test
+#### Test - Yes Intergation test cases also included in 'it' floder. 
 
     $ mvn clean integration-test
 
