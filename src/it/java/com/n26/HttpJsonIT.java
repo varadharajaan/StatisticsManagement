@@ -27,14 +27,23 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
@@ -42,7 +51,10 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
@@ -62,14 +74,41 @@ public class HttpJsonIT {
             .ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX").withZone(ZoneId.of("UTC"));
 
     private static HttpMessageConverter mappingJackson2HttpMessageConverter;
+
+    @Autowired
+    private GenericWebApplicationContext webApplicationContext;
+
+    private MockMvc mockMvc;
+
+    @Before
+    public void getContext() {
+        mockMvc = webAppContextSetup(webApplicationContext).build();
+        assertNotNull(mockMvc);
+    }
+
+    @Autowired
+    public void setConverters(HttpMessageConverter<?>[] converters) {
+        mappingJackson2HttpMessageConverter = Stream.of(converters)
+                .filter(hmc -> hmc instanceof MappingJackson2HttpMessageConverter)
+                .findAny()
+                .orElse(null);
+
+        assertNotNull(mappingJackson2HttpMessageConverter);
+    }
+
+    List<String> httpJsonFiles = new ArrayList<>();
+
+    Map<String, String> httpJsonAndTestname = new HashMap<>();
+
+    Map<String, Long> executionTime = new HashMap<>();
+
+    Map<String, Pair<Pair<String, String>, Pair<String, String>>> testFailures = new HashMap<>();
+
     @Rule
     public Stopwatch stopwatch = new Stopwatch() {
 
     };
-    List<String> httpJsonFiles = new ArrayList<>();
-    Map<String, String> httpJsonAndTestname = new HashMap<>();
-    Map<String, Long> executionTime = new HashMap<>();
-    Map<String, Pair<Pair<String, String>, Pair<String, String>>> testFailures = new HashMap<>();
+
     @Rule
     public TestWatcher watchman = new TestWatcher() {
 
@@ -98,25 +137,6 @@ public class HttpJsonIT {
             super.finished(description);
         }
     };
-    @Autowired
-    private GenericWebApplicationContext webApplicationContext;
-    private MockMvc mockMvc;
-
-    @Before
-    public void getContext() {
-        mockMvc = webAppContextSetup(webApplicationContext).build();
-        assertNotNull(mockMvc);
-    }
-
-    @Autowired
-    public void setConverters(HttpMessageConverter<?>[] converters) {
-        mappingJackson2HttpMessageConverter = Stream.of(converters)
-                .filter(hmc -> hmc instanceof MappingJackson2HttpMessageConverter)
-                .findAny()
-                .orElse(null);
-
-        assertNotNull(mappingJackson2HttpMessageConverter);
-    }
 
     @Test
     public void dynamicTests() {

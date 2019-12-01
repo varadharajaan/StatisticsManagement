@@ -3,9 +3,11 @@ package com.n26;
 import com.n26.Controller.StatisticsController;
 import com.n26.Service.StatisticsService;
 import com.n26.model.Statistics;
+import com.n26.model.StatisticsResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.mockito.internal.matchers.Any;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -21,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.math.BigDecimal;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 
 /**
  * @author MiguelAraCo
@@ -44,7 +47,11 @@ public class StatisticsControllerTest {
         statistics.setCount(8L);
         statistics.setAvg(new BigDecimal("6.21"));
 
+        StatisticsResponse statisticsResponse = new StatisticsResponse();
+        statisticsResponse.setMax("fs");
+
         Mockito.when(statisticsService.get()).thenReturn(statistics);
+        Mockito.when(statisticsService.formStatisticsResponse(any(Statistics.class))).thenReturn(statisticsResponse);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/statistics").accept(MediaType.APPLICATION_JSON);
 
