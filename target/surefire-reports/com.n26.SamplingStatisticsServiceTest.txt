@@ -1,0 +1,7 @@
+-------------------------------------------------------------------------------
+Test set: com.n26.SamplingStatisticsServiceTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.004 s <<< FAILURE! - in com.n26.SamplingStatisticsServiceTest
+initializationError(com.n26.SamplingStatisticsServiceTest)  Time elapsed: 0 s  <<< ERROR!
+java.lang.NoClassDefFoundError: org/springframework/core/annotation/MergedAnnotations$SearchStrategy
+
