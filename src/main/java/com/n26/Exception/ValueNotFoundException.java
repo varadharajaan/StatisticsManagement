@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class ValueNotFoundException extends RuntimeException {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 6601130339967844171L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 6601130339967844171L;
 
-	public ValueNotFoundException() {
-		super();
-	}
+    public ValueNotFoundException() {
+        super();
+    }
 
-	public ValueNotFoundException(String message) {
-		super(message);
-	}
+    public ValueNotFoundException(String message) {
+        super(message);
+    }
 
 }

@@ -1,9 +1,8 @@
 package com.n26;
 
-import static org.junit.Assert.assertEquals;
-
-import java.math.BigDecimal;
-
+import com.n26.Controller.StatisticsController;
+import com.n26.Service.StatisticsService;
+import com.n26.model.Statistics;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -19,44 +18,44 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.n26.Controller.StatisticsController;
-import com.n26.Service.StatisticsService;
-import com.n26.model.Statistics;
+import java.math.BigDecimal;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author MiguelAraCo
  */
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = StatisticsController.class, secure = false)
-@ContextConfiguration(classes = { Application.class })
+@ContextConfiguration(classes = {Application.class})
 public class StatisticsControllerTest {
-	@Autowired
-	private MockMvc mvc;
+    @Autowired
+    private MockMvc mvc;
 
-	@MockBean
-	private StatisticsService statisticsService;
+    @MockBean
+    private StatisticsService statisticsService;
 
-	@Test
-	public void returns200WithJSON() throws Exception {
-		Statistics statistics = new Statistics();
-		statistics.setMax(new BigDecimal("10.25"));
-		statistics.setMin(new BigDecimal("2.4"));
-		statistics.setSum(new BigDecimal("49.65"));
-		statistics.setCount(8L);
-		statistics.setAvg(new BigDecimal("6.21"));
+    @Test
+    public void returns200WithJSON() throws Exception {
+        Statistics statistics = new Statistics();
+        statistics.setMax(new BigDecimal("10.25"));
+        statistics.setMin(new BigDecimal("2.4"));
+        statistics.setSum(new BigDecimal("49.65"));
+        statistics.setCount(8L);
+        statistics.setAvg(new BigDecimal("6.21"));
 
-		Mockito.when(statisticsService.get()).thenReturn(statistics);
+        Mockito.when(statisticsService.get()).thenReturn(statistics);
 
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/statistics").accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/statistics").accept(MediaType.APPLICATION_JSON);
 
-		MockHttpServletResponse response = mvc.perform(requestBuilder).andReturn().getResponse();
-		assertEquals("The expected status code wasn't returned", 200, response.getStatus());
+        MockHttpServletResponse response = mvc.perform(requestBuilder).andReturn().getResponse();
+        assertEquals("The expected status code wasn't returned", 200, response.getStatus());
 
-		String expected = "" + "{" + "   max: 10.25," + "   min: 2.4," + "   sum: 49.65," + "   count: 8,"
-				+ "   avg: 6.21" + "}";
+        String expected = "" + "{" + "   max: 10.25," + "   min: 2.4," + "   sum: 49.65," + "   count: 8,"
+                + "   avg: 6.21" + "}";
 
-		JSONAssert.assertNotEquals("/statistics didn't return the expected JSON", expected, response.getContentAsString(),
-				false);
-	}
+        JSONAssert.assertNotEquals("/statistics didn't return the expected JSON", expected, response.getContentAsString(),
+                false);
+    }
 
 }

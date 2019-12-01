@@ -6,21 +6,21 @@ package com.n26.model;
  */
 public enum ErrorCode {
 
-	INVALID_REQUEST_JSON(400, "Bad Request - json error"), UNPARSEABLE_ERROR(422, "Unparsable Error - field error");
+    INVALID_REQUEST_JSON(400, "Bad Request - json error"), UNPARSEABLE_ERROR(422, "Unparsable Error - field error");
 
-	private Integer errorCode;
-	private String errorMessage;
+    private Integer errorCode;
+    private String errorMessage;
 
-	ErrorCode(Integer errorCode, String errorMessage) {
-		this.errorCode = errorCode;
-		this.errorMessage = errorMessage;
-	}
+    ErrorCode(Integer errorCode, String errorMessage) {
+        this.errorCode = errorCode;
+        this.errorMessage = errorMessage;
+    }
 
-	public Integer getErrorCode() {
-		return errorCode;
-	}
+    public Integer getErrorCode() {
+        return errorCode;
+    }
 
-	public String getErrorMessage() {
-		return errorMessage;
-	}
+    public String getErrorMessage() {
+        return errorMessage;
+    }
 }

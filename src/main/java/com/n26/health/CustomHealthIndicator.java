@@ -4,6 +4,7 @@ package com.n26.health;
  * @author Varadharajan on 2019-09-28 15:08
  * @project name: coding-challenge
  */
+
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.stereotype.Component;
