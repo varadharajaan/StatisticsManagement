@@ -38,3 +38,5 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 logFile.log.2019-09-27.0.gz
 
+/logFile.log.2019-09-27.0.gz
+/logFile.log
